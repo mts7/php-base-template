@@ -208,4 +208,4 @@ workflows:
       - psalm:
           requires:
             - job-init
-      - yaml:
+      - yaml
