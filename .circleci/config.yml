@@ -117,10 +117,7 @@ jobs:
       - enable_extensions
       - run:
           name: Unit Tests
-          command: php -d pcov.enabled=1 vendor/bin/phpunit \
-            --coverage-html ~/reports/code-coverage \
-            --coverage-xml reports/coverage-xml \
-            --log-junit ~/reports/junit.xml
+          command: php -d pcov.enabled=1 vendor/bin/phpunit --coverage-html ~/reports/code-coverage --coverage-xml reports/coverage-xml --log-junit ~/reports/junit.xml
       - store_artifacts:
           path: ~/reports/code-coverage
           destination: code-coverage
@@ -136,8 +133,7 @@ jobs:
           name: Mutation Tests
           command: |
             mv ~/reports/junit.xml reports/coverage-xml/junit.xml
-            php -d memory_limit=-1 vendor/bin/infection --threads=4 --min-msi=100 --min-covered-msi=100 \
-              --coverage=reports/coverage-xml --skip-initial-tests
+            php -d memory_limit=-1 vendor/bin/infection --threads=4 --min-msi=100 --min-covered-msi=100 --coverage=reports/coverage-xml --skip-initial-tests
       - store_artifacts:
           path: reports/infection.html
           destination: infection.html
@@ -153,8 +149,7 @@ jobs:
             sudo apt install xsltproc
       - run:
           name: Psalm
-          command: vendor/bin/psalm --output-format=xml | \
-            xsltproc vendor/roave/psalm-html-output/psalm-html-output.xsl - > ~/reports/psalm.html
+          command: vendor/bin/psalm --output-format=xml | xsltproc vendor/roave/psalm-html-output/psalm-html-output.xsl - > ~/reports/psalm.html
       - store_artifacts:
           path: ~/reports/psalm.html
           destination: psalm.html
@@ -168,8 +163,8 @@ jobs:
       - run:
           name: YAML Lint
           command: |
-            sudo apt install yamllint
-            yammllint .
+            sudo apt-get install yamllint
+            yamllint .
       - run:
           name: Code Standards
           command: vendor/bin/phpcs -n
