@@ -5,6 +5,9 @@ executors:
     docker:
       - image: cimg/php:8.1
     resource_class: medium
+  python-3:
+    docker:
+      - image: python:latest
 
 orbs:
   php: circleci/php@1.1.0
@@ -161,11 +164,6 @@ jobs:
           name: Lint
           command: vendor/bin/parallel-lint --exclude .git --exclude vendor --colors .
       - run:
-          name: YAML Lint
-          command: |
-            sudo apt-get install yamllint
-            yamllint .
-      - run:
           name: Code Standards
           command: vendor/bin/phpcs -n
       - run:
@@ -186,6 +184,16 @@ jobs:
       - store_artifacts:
           path: reports/psalm-security.sarif
           destination: psalm-security.sarif
+  yaml:
+    executor: python-3
+    steps:
+      - checkout_code
+      - run:
+          name: Install YAML Lint
+          command: pip install yamllint
+      - run:
+          name: YAML Lint
+          command: yamllint .
 
 workflows:
   build:
@@ -200,3 +208,4 @@ workflows:
       - psalm:
           requires:
             - job-init
+      - yaml:
