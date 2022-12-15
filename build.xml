@@ -75,6 +75,23 @@
             <arg path="src" />
             <arg path="tests" />
         </exec>
+        <exec command="which yamllint" returnProperty="return.code"/>
+        <if>
+            <isfailure code="${return.code}"/>
+            <then>
+                <echo message="Install yamllint to lint yaml files"/>
+            </then>
+            <else>
+                <exec
+                        executable="yamllint"
+                        logoutput="true"
+                        passthru="true"
+                        checkreturn="true"
+                >
+                    <arg path="." />
+                </exec>
+            </else>
+        </if>
     </target>
 
     <target name="cs">
